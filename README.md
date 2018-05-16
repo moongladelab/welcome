@@ -1,12 +1,13 @@
 # World Quiz Lottery
 
 ## How To Participate?
-You'll get a question about an event or news or whatever shall happen in few days. All you need to do is think about your answer and vote for it, send ETH to proper contract address. 
+You'll get a question about an event or news or whatever shall happen in few days. 
+All you need to do is answering to the question and vote for it, send ETH to proper contract address. 
 If you choose the right answer, you'll get your ETH back and prize ETH. If you choose wrong answer, you loose your ETH.
 
 
 ## Rules
-all the following rules will be coded in ethereum contract and no one can change, take advantage or hack(hopefully).
+all the following rules will be coded in ethereum contract and no one can change, take advantages or crack(hopefully).
 
 
 
