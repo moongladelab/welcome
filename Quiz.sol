@@ -31,5 +31,12 @@ contract Quiz {
 	function () external payable {
 	}
 
+	function openQuiz(uint256 _start, uint256 _end, uint256 _cap) onlyQuizMaker external {
+		require(answerYes.opened == false && answerNo.opened == false);
+
+		answerYes.openAnswer(_start, _end, _cap);
+		answerNo.openAnswer(_start, _end, _cap);
+	}
+
 }
 

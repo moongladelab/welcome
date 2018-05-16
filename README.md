@@ -7,12 +7,20 @@ If you choose the right answer, you'll get your ETH back and prize ETH. If you c
 
 
 ## Rules
-all the following rules will be coded in ethereum contract and no one can change, take advantages or crack(hopefully).
+all the following rules will be coded in ethereum contract and no one can change, take advantages or crack(hopefully).<br />
 
+### prize calculation
 
+if X answered right answer, what X will get is <br />
+(Y + N) * 0.986 * A / Y<br />
+Y: total gathered ETH on answer Yes<br />
+N: total gathered ETH on answer No<br />
+A: ETH transfered from address X<br />
+
+if X transfered ETH to wrong answer contract, X gets nothing.
 
 ## Policies
-1.3% of total funded ETH goes to moonglade lab. and the ETH will be used for better Quiz lottery or donated to organizations<br />
+1.4% of total funded ETH goes to moonglade lab. and the ETH will be used for better Quiz lottery or donated to admirable organizations(github?)<br />
 
 ## why quiz?
 rolling dice, slot machines, cards and stuffs are boring. and can't have trust in their system. 
