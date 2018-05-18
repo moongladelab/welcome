@@ -1,4 +1,9 @@
-# World Quiz Lottery
+# WORLD QUIZ on world computer
+
+## VERY IMPORTANT
+If you want to participate World Quiz, <br />
+YOU HAVE TO USE YOUR WALLET ADDRESS WHICH YOU OWN AND POSSESS YOUR PRIVATE KEY. NOT EXCHANGE WALLET.<br />
+If you use exchange wallet or something, you can't receive your winning prize.
 
 ## How To Participate?
 You'll get a question about an event or news or whatever shall happen in few days. 
@@ -11,16 +16,16 @@ all the following rules will be coded in ethereum contract and no one can change
 
 ### prize calculation
 
-if X answered right answer, what X will get is <br />
-(Y + N) * 0.986 * A / Y<br />
-Y: total gathered ETH on answer Yes<br />
-N: total gathered ETH on answer No<br />
+if X answered right, what X will get is <br />
+(W + L) * 0.989 * A / W<br />
+W: total gathered ETH on right answer<br />
+L: total gathered ETH on wrong answer<br />
 A: ETH transfered from address X<br />
 
 if X transfered ETH to wrong answer contract, X gets nothing.
 
 ## Policies
-1.4% of total funded ETH goes to moonglade lab. and the ETH will be used for better Quiz lottery or donated to admirable organizations(github?)<br />
+1.1% of total funded ETH goes to moonglade lab. and the ETH will be used for better Quiz lottery or donated to admirable organizations(github?)<br />
 
 ## why quiz?
 rolling dice, slot machines, cards and stuffs are boring. and can't have trust in their system. 
