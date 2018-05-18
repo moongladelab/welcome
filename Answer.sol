@@ -1,10 +1,8 @@
 pragma solidity ^0.4.23;
 
-import "./Quiz.sol";
-
 contract Answer {
 	address public quizMaker;
-	Quiz quiz;
+	address public quiz;
 
 	uint256 public gathered;
 	uint256 public cap;
@@ -22,7 +20,7 @@ contract Answer {
 
 	constructor (address _quizMaker, address _quiz) public {
 		quizMaker = _quizMaker;
-		quiz = Quiz(_quiz);
+		quiz = _quiz;
 
 		opened = false;
 	}
@@ -32,7 +30,7 @@ contract Answer {
 		_;
 	}
 	modifier fromQuizContract() {
-		require(msg.sender == address(quiz));
+		require(msg.sender == quiz);
 		_;
 	}
 
@@ -40,8 +38,8 @@ contract Answer {
 		quizMaker = _newQuizMaker;
 	}
 
-	function registerQuiz(address _quiz) fromQuizMaker external {
-		quiz = Quiz(_quiz);
+	function changeQuiz(address _quiz) fromQuizMaker external {
+		quiz = _quiz;
 	}
 
 	function openAnswer(uint256 _start, uint256 _end, uint _cap) fromQuizContract external {
@@ -65,7 +63,7 @@ contract Answer {
 		if(!opened)
 			return false;
 
-		address(quiz).transfer(gathered);
+		quiz.transfer(gathered);
 
 		opened = false;
 	}
