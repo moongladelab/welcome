@@ -14,6 +14,11 @@ contract Answer {
 
 	bool public opened;
 
+	mapping (address => uint256) public playedAmount;
+	mapping (uint256 => address) public players;
+
+	uint256 totalPlayers;
+
 
 	constructor (address _quizMaker, address _quiz) public {
 		quizMaker = _quizMaker;
@@ -47,24 +52,40 @@ contract Answer {
 
 		opened = true;
 		gathered = 0;
+
+		for(uint256 i = 0; i < totalPlayers; i++) {
+			playedAmount[players[i]] = 0;
+		}
+
+		totalPlayers = 0;
 	}
 
 	function closeAnswer() fromQuizContract external returns (bool){
 		if(!opened)
 			return false;
 
-		quiz.transfer(gathered);
+		quiz.address.transfer(gathered);
 
 		opened = false;
 	}
 
 	function () external payable {
 		require(startTime <= now && now <= endTime);
+		if(playedAmount[msg.sender] == 0) {
+			players[totalPlayers] = msg.sender;
+			totalPlayers++;
+		}
+		playedAmount[msg.sender] += msg.value;
 		gathered += msg.value;
-
-		quiz.answered(msg.sender, msg.value, 1);
+	}
+	
+	function getAddress(uint256 _no) external view returns(address) {
+		return players[_no];
 	}
 
+	function getAmount(uint256 _no) external view returns(uint256) {
+		return playedAmount[players[_no]];
+	}
 
 }
 

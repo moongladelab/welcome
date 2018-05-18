@@ -7,7 +7,6 @@ contract Quiz {
 
 	uint8 public numberOfOptions;
 	mapping (uint8 => Answer) internal answers;
-	mapping (uint8 => mapping (address => uint256)) participated;
 
 	constructor (address _quizMaker) public {
 		quizMaker = _quizMaker;
@@ -42,16 +41,40 @@ contract Quiz {
 		numberOfOptions = _options;
 	}
 
-	function closeQuiz(uint8 answer) {
+	function closeQuiz(uint8 rightAnswer) {
 		require(answer <= numberOfOptions && answer != 0)
-		for(uint8 i = 0; i < numberOfOptions; i++)
+		uint256 i;
+		for(i = 0; i < numberOfOptions; i++) {
 			answers[i].closeAnswer();
+		}
+
+		uint256 W;
+		uint256 L;
+		uint256 A;
+
+		W = answer[rightAnswer].gathered;
+		for(i = 0; i < numberOfOptions; i++) {
+			if(i != rightAnswer)
+				A += answer[i].gathered;
+		}
+
+
+		for(i = 0; i < answer[rightAnswer].totalPlayers; i++) {
+			A = answer[rightAnswer].getAmount(i);
+			answer[rightAnswer].getAddress(i).transfer(prize(A, W, L));
+		}
+
 	}
 
+	function prize(uint256 _A, uint256 _W, uint256 _L) internal view returns(uint256) {
+		return ((_W + _L) * 0.989 * _A) / _L;
+	}
+
+	/*
 	function answered(address _participant, uint256 _amount, uint8 _options) {
 		require(msg.sender == answers[_options].address);
-		participated[_options][_participants] += _amount;
 	}
+   */
 
 }
 
