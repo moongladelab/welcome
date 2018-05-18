@@ -5,10 +5,10 @@ import "./Answer.sol";
 contract Quiz {
 	address public quizMaker;
 
-	uint8 public numberOfOptions;
+	uint8 public numberOfChoices;
 	mapping (uint8 => Answer) internal answers;
 
-	uint constant MaxOptions = 5;
+	uint constant MAXCHOICES = 5;
 	uint constant FEE = 989;
 
 
@@ -26,30 +26,30 @@ contract Quiz {
 	}
 
 	function registerAnswers(address[] _answers) onlyQuizMaker external {
-		require(_answers.length == MaxOptions);
-		for(uint8 i = 0; i < MaxOptions; i++)
+		require(_answers.length == MAXCHOICES);
+		for(uint8 i = 0; i < MAXCHOICES; i++)
 			answers[i] = Answer(_answers[i]);
 	}
 
 	function () external payable {
 	}
 
-	function openQuiz(uint256 _start, uint256 _end, uint256 _cap, uint8 _options) onlyQuizMaker external {
-		require(_options <= MaxOptions);
+	function openQuiz(uint256 _start, uint256 _end, uint256 _cap, uint8 _choices) onlyQuizMaker external {
+		require(_choices <= MAXCHOICES);
 		uint8 i;
-		for(i = 0; i < _options; i++)
+		for(i = 0; i < _choices; i++)
 			require(answers[i].isOpen() == false);
 
-		for(i = 0; i < _options; i++)
+		for(i = 0; i < _choices; i++)
 			answers[i].openAnswer(_start, _end, _cap);
 
-		numberOfOptions = _options;
+		numberOfChoices = _choices;
 	}
 
 	function closeQuiz(uint8 rightAnswer) onlyQuizMaker external {
-		require(rightAnswer < numberOfOptions);
+		require(rightAnswer < numberOfChoices);
 		uint8 j;
-		for(j = 0; j < numberOfOptions; j++) {
+		for(j = 0; j < numberOfChoices; j++) {
 			answers[j].closeAnswer();
 		}
 
@@ -58,7 +58,7 @@ contract Quiz {
 		uint256 A;
 
 		W = answers[rightAnswer].getGathered();
-		for(j = 0; j < numberOfOptions; j++) {
+		for(j = 0; j < numberOfChoices; j++) {
 			if(j != rightAnswer)
 				A += answers[j].getGathered();
 		}
