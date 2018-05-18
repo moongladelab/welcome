@@ -17,7 +17,7 @@ contract Answer {
 	mapping (address => uint256) public playedAmount;
 	mapping (uint256 => address) public players;
 
-	uint256 totalPlayers;
+	uint256 public totalPlayers;
 
 
 	constructor (address _quizMaker, address _quiz) public {
@@ -29,9 +29,10 @@ contract Answer {
 
 	modifier fromQuizMaker() {
 		require(msg.sender == quizMaker);
+		_;
 	}
 	modifier fromQuizContract() {
-		require(msg.sender == quiz.address);
+		require(msg.sender == address(quiz));
 		_;
 	}
 
@@ -64,7 +65,7 @@ contract Answer {
 		if(!opened)
 			return false;
 
-		quiz.address.transfer(gathered);
+		address(quiz).transfer(gathered);
 
 		opened = false;
 	}
@@ -87,5 +88,15 @@ contract Answer {
 		return playedAmount[players[_no]];
 	}
 
+
+	function getGathered() external view returns(uint256) {
+		return gathered;
+	}
+	function getTotalPlayers() external view returns(uint256) {
+		return totalPlayers;
+	}
+	function isOpen() external view returns(bool) {
+		return opened;
+	}
 }
 

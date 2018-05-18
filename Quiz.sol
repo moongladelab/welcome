@@ -8,6 +8,10 @@ contract Quiz {
 	uint8 public numberOfOptions;
 	mapping (uint8 => Answer) internal answers;
 
+	uint constant MaxOptions = 5;
+	uint constant FEE = 989;
+
+
 	constructor (address _quizMaker) public {
 		quizMaker = _quizMaker;
 	}
@@ -22,59 +26,56 @@ contract Quiz {
 	}
 
 	function registerAnswers(address[] _answers) onlyQuizMaker external {
-		require(_answers.length == 4);
-		for(uint8 i = 0; i < 4; i++)
-			answer[i] = Answer(_answers[i]);
+		require(_answers.length == MaxOptions);
+		for(uint8 i = 0; i < MaxOptions; i++)
+			answers[i] = Answer(_answers[i]);
 	}
 
 	function () external payable {
 	}
 
 	function openQuiz(uint256 _start, uint256 _end, uint256 _cap, uint8 _options) onlyQuizMaker external {
+		require(_options <= MaxOptions);
 		uint8 i;
 		for(i = 0; i < _options; i++)
-			require(answers[i].opened == false);
+			require(answers[i].isOpen() == false);
 
-		for(uint8 i = 0; i < _options; i++)
+		for(i = 0; i < _options; i++)
 			answers[i].openAnswer(_start, _end, _cap);
 
 		numberOfOptions = _options;
 	}
 
-	function closeQuiz(uint8 rightAnswer) {
-		require(answer <= numberOfOptions && answer != 0)
-		uint256 i;
-		for(i = 0; i < numberOfOptions; i++) {
-			answers[i].closeAnswer();
+	function closeQuiz(uint8 rightAnswer) onlyQuizMaker external {
+		require(rightAnswer < numberOfOptions);
+		uint8 j;
+		for(j = 0; j < numberOfOptions; j++) {
+			answers[j].closeAnswer();
 		}
 
 		uint256 W;
 		uint256 L;
 		uint256 A;
 
-		W = answer[rightAnswer].gathered;
-		for(i = 0; i < numberOfOptions; i++) {
-			if(i != rightAnswer)
-				A += answer[i].gathered;
+		W = answers[rightAnswer].getGathered();
+		for(j = 0; j < numberOfOptions; j++) {
+			if(j != rightAnswer)
+				A += answers[j].getGathered();
 		}
 
 
-		for(i = 0; i < answer[rightAnswer].totalPlayers; i++) {
-			A = answer[rightAnswer].getAmount(i);
-			answer[rightAnswer].getAddress(i).transfer(prize(A, W, L));
+		uint256 i;
+		uint256 total = answers[rightAnswer].getTotalPlayers();
+		for(i = 0; i < total; i++) {
+			A = answers[rightAnswer].getAmount(i);
+			answers[rightAnswer].getAddress(i).transfer(prize(A, W, L));
 		}
 
 	}
 
-	function prize(uint256 _A, uint256 _W, uint256 _L) internal view returns(uint256) {
-		return ((_W + _L) * 0.989 * _A) / _L;
+	function prize(uint256 _A, uint256 _W, uint256 _L) internal pure returns(uint256) {
+		return ((_W + _L) * _A * FEE / 1000) / _L;
 	}
-
-	/*
-	function answered(address _participant, uint256 _amount, uint8 _options) {
-		require(msg.sender == answers[_options].address);
-	}
-   */
 
 }
 
