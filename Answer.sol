@@ -4,7 +4,6 @@ import "./Quiz.sol";
 
 contract Answer {
 	address public quizMaker;
-	address public quizAddress;
 	Quiz quiz;
 
 	uint256 public gathered;
@@ -16,26 +15,30 @@ contract Answer {
 	bool public opened;
 
 
-	constructor (address _quizMaker) public {
+	constructor (address _quizMaker, address _quiz) public {
 		quizMaker = _quizMaker;
+		quiz = Quiz(_quiz);
+
 		opened = false;
 	}
 
-	modifier onlyQuizMaker() {
+	modifier fromQuizMaker() {
 		require(msg.sender == quizMaker);
+	}
+	modifier fromQuizContract() {
+		require(msg.sender == quiz.address);
 		_;
 	}
 
-	function changeQuizMaker(address _newQuizMaker) onlyQuizMaker external {
+	function changeQuizMaker(address _newQuizMaker) fromQuizMaker external {
 		quizMaker = _newQuizMaker;
 	}
 
-	function registerQuiz(address _quiz) onlyQuizMaker external {
-		quizAddress = _quiz;
+	function registerQuiz(address _quiz) fromQuizMaker external {
 		quiz = Quiz(_quiz);
 	}
 
-	function openAnswer(uint256 _start, uint256 _end, uint _cap) onlyQuizMaker external {
+	function openAnswer(uint256 _start, uint256 _end, uint _cap) fromQuizContract external {
 		require(!opened);
 
 		startTime = _start;
@@ -46,8 +49,9 @@ contract Answer {
 		gathered = 0;
 	}
 
-	function closeAnswer() onlyQuizMaker external {
-		require(opened);
+	function closeAnswer() fromQuizContract external returns (bool){
+		if(!opened)
+			return false;
 
 		quiz.transfer(gathered);
 
@@ -58,8 +62,7 @@ contract Answer {
 		require(startTime <= now && now <= endTime);
 		gathered += msg.value;
 
-		quiz.answeredYes(msg.sender, msg.value);
-		//quiz.answeredNo(msg.sender, msg.value);
+		quiz.answered(msg.sender, msg.value, 1);
 	}
 
 
